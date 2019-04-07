@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+{% block title %}Experiences{% endblock %}
+{% block body %}
+
+<div class="jumbotron">
+  <h3 class="display-3">{{ exp.name }}</h3>
+  <hr>
+    <ul style="line-height:30px">
+        <li> <font size = "5">Compensation : {{exp.compensation}} €</font></li>
+        <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
+        <li> <font size = "5"> Sex requirement : {{ exp.sexReq }}  </font> </li>
+        <li> <font size = "5"> Specifiq requirement : {{ exp.SpecifiqReq }}  </font> </li>
+        <li> <font size = "5"> Free requirement : 
+        {% if exp.freeReq == 1 %}
+        Yes
+        {%  else %}
+        No
+        {% endif %}</font></li>
+    </ul>
+    <a href="{{path('modifyExp', {'id' : exp.id, 'method' : 'modify'}) }}" style="float:right" class="btn btn-primary">Modify</a>
+</div>
+
+
+<div>
+<h4 class="display-4">Participants</h4>
+  <ul class="list-group">
+   {% for participant in participants %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{participant.IdParticipant.Lastname}}
+
+      <span>
+        {% if participant.Validated == 1 %}
+        Inscription validée
+        {%  else %}
+        Inscription non validée
+        {% endif %}
+        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id}) }}" type="button" class="btn btn-success">Accepter</a>
+        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id}) }}" type="button" class="btn btn-danger">Refuser</a>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% endblock %}

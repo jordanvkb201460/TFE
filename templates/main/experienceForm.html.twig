@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+    
+{% block title %}
+Formulaire Experience
+{% endblock %}
+
+{% form_theme formExp 'bootstrap_4_layout.html.twig' %}
+{% block body %}
+<div style="width:600px">
+
+    {{ form_start(formExp) }}
+
+    {{ form_row(formExp.Compensation,{'attr': {'placeholder':'Compensation'}})}}
+    {{ form_row(formExp.FeedBack,{'attr': {'placeholder':'FeedBack'}})}}
+    {{ form_row(formExp.AgeReq,{'attr': {'placeholder':'AgeReq'}})}}
+    {{ form_row(formExp.SexReq,{'attr': {'placeholder':'SexReq'}})}}
+    {{ form_row(formExp.SpecifiqReq,{'attr': {'placeholder':'SpecifiqReq'}})}}
+    {{ form_row(formExp.FreeReq,{'attr': {'placeholder':'FreeReq'}})}}
+    {{ form_row(formExp.Place,{'attr': {'placeholder':'Place'}})}}
+    {{ form_row(formExp.Name,{'attr': {'placeholder':'Name'}})}}
+
+    <button type="submit" class="btn btn-success">Submit</button>
+
+    {{ form_end(formExp) }}
+</div>
+
+{% endblock %}

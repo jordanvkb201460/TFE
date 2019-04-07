@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+    
+{% block title %}
+Connexion
+{% endblock %}
+
+{% form_theme formUser 'bootstrap_4_layout.html.twig' %}
+{% block body %}
+<div style="width:600px">
+
+    {{ form_start(formUser) }}
+    {{ form_row(formUser.Mail,{'attr': {'placeholder':'Email'}})}}<small>Attention votre mail sera votre identifiant de connexion </small>
+    {{ form_row(formUser.Password,{'attr': {'placeholder':'Password'}})}}
+    {{ form_row(formUser.ConfirmPassword,{'attr': {'placeholder':'Password'}})}}
+    {{ form_row(formUser.LastName,{'attr': {'placeholder':'Last Name'}})}}
+    {{ form_row(formUser.FirstName,{'attr': {'placeholder':'First Name'}})}}
+    {{ form_row(formUser.Department,{'attr': {'placeholder':'Department'}})}}
+    {{ form_row(formUser.Status,{'attr': {'placeholder':'Status, Job'}})}}
+
+    <button type="submit" class="btn btn-success">Submit</button>
+
+    {{ form_end(formUser) }}
+
+    <a class="nav-link" href="{{path('security_login')}}" style="padding:3.5em 0.5em">Vous possédez déjà un compte ?</a>
+</div>
+
+{% endblock %}
