@@ -25,7 +25,7 @@ class MainController extends AbstractController
     {
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
-            'authenticated' => true, //rendre ca dynamique
+            'authenticated' => true, //rendre ca dynamique test github
         ]);
     }
 
