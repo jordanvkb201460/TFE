@@ -79,6 +79,16 @@ class Experience
      */
     private $participationRequests;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $DateDebut;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $datefin;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -296,5 +306,27 @@ class Experience
         return $this;
     }
 
-   
+    public function getDateDebut(): ?\DateTimeInterface
+    {
+        return $this->DateDebut;
+    }
+
+    public function setDateDebut(?\DateTimeInterface $DateDebut): self
+    {
+        $this->DateDebut = $DateDebut;
+
+        return $this;
+    }
+
+    public function getDatefin(): ?\DateTimeInterface
+    {
+        return $this->datefin;
+    }
+
+    public function setDatefin(?\DateTimeInterface $datefin): self
+    {
+        $this->datefin = $datefin;
+
+        return $this;
+    }  
 }

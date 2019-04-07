@@ -16,6 +16,8 @@
         {%  else %}
         No
         {% endif %}</font></li>
+        <li> <font size = "5"> Date début : {{ exp.dateDebut | date("d/m/Y")}}  </font> </li>
+        <li> <font size = "5"> Date fin : {{ exp.dateFin  | date("d/m/Y")}}  </font> </li>
     </ul>
     <a href="{{path('modifyExp', {'id' : exp.id, 'method' : 'modify'}) }}" style="float:right" class="btn btn-primary">Modify</a>
 </div>

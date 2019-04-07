@@ -9,7 +9,8 @@ Formulaire Experience
 <div style="width:600px">
 
     {{ form_start(formExp) }}
-
+    <legend>Creation d'une expérience</legend>
+    {{ form_row(formExp.Name,{'attr': {'placeholder':'Name'}})}}
     {{ form_row(formExp.Compensation,{'attr': {'placeholder':'Compensation'}})}}
     {{ form_row(formExp.FeedBack,{'attr': {'placeholder':'FeedBack'}})}}
     {{ form_row(formExp.AgeReq,{'attr': {'placeholder':'AgeReq'}})}}
@@ -17,7 +18,9 @@ Formulaire Experience
     {{ form_row(formExp.SpecifiqReq,{'attr': {'placeholder':'SpecifiqReq'}})}}
     {{ form_row(formExp.FreeReq,{'attr': {'placeholder':'FreeReq'}})}}
     {{ form_row(formExp.Place,{'attr': {'placeholder':'Place'}})}}
-    {{ form_row(formExp.Name,{'attr': {'placeholder':'Name'}})}}
+    {{ form_row(formExp.DateDebut,{'attr': {'placeholder':'Place'}})}}
+    {{ form_row(formExp.DateFin,{'attr': {'placeholder':'Place'}})}}
+    
 
     <button type="submit" class="btn btn-success">Submit</button>
 

@@ -6,6 +6,7 @@ use App\Entity\Experience;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class ExperienceType extends AbstractType
 {
@@ -20,6 +21,8 @@ class ExperienceType extends AbstractType
             ->add('SexReq')
             ->add('SpecifiqReq')
             ->add('Name')
+            ->add('DateDebut', DateType::class)
+            ->add('DateFin', DateType::class)
         ;
     }
 

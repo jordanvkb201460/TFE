@@ -9,6 +9,7 @@ Connexion
 <div style="width:600px">
 
     {{ form_start(formUser) }}
+    <legend>Inscription</legend>
     {{ form_row(formUser.Mail,{'attr': {'placeholder':'Email'}})}}<small>Attention votre mail sera votre identifiant de connexion </small>
     {{ form_row(formUser.Password,{'attr': {'placeholder':'Password'}})}}
     {{ form_row(formUser.ConfirmPassword,{'attr': {'placeholder':'Password'}})}}
