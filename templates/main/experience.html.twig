@@ -36,8 +36,8 @@
         {%  else %}
         Inscription non validée
         {% endif %}
-        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id}) }}" type="button" class="btn btn-success">Accepter</a>
-        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id}) }}" type="button" class="btn btn-danger">Refuser</a>
+        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "true"}) }}" type="button" class="btn btn-success">Accepter</a>
+        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "false"}) }}" type="button" class="btn btn-danger">Refuser</a>
       </span>
     </li>
     {% endfor %}
