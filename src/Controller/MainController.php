@@ -34,11 +34,10 @@ class MainController extends AbstractController
     public function request($idExp, $idParticipant,$validated, ObjectManager $manager)
     {
         $test = true;
-        dump($test);
         $repo = $this->getDoctrine()->getRepository(Participant::class);
 
         $participant = $repo->findOneBy(array("id" => $idExp));        
-        //dump($participant)
+        dump($validated);
 
         $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
 
@@ -47,17 +46,12 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
         $exp = $repo->findOneBy(array("id" => $idExp));
-        if($validated == ("true"))
-        {
-            $participationRq[0]->setValidated(true);
-        }
-        else{
-            $participationRq[0]->setValidated(false);
-        }
+       
+        $participationRq[0]->setValidated($validated);
         $manager->persist($participationRq[0]);
         $manager->flush();
         
-        //dump($participationRq);
+        dump($participationRq);
 
         return $this->render('main/experience.html.twig',[
             'authenticated' => true,
@@ -95,7 +89,9 @@ class MainController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            $researcher->setId(1); //changer 
+            //$researcher->setId(1); //changer 
+            $researcher->setToken("test");
+            $researcher->setIsActive(true);
             $hash = $encoder->encodePassword($researcher, $researcher->getPassword());
             $researcher->setPAssword($hash);
             $manager->persist($researcher);
@@ -132,12 +128,12 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
 
         $participationRq = $repo->findBy(array("IdExperience" => $id));
-        
+        dump($participationRq);
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
         $exp = $repo->findOneBy(array("id" => $id));
         
-        //dump($participationRq);
+        dump($participationRq);
 
         return $this->render('main/experience.html.twig',[
             'exp' => $exp,

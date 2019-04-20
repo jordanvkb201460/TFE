@@ -17,7 +17,7 @@ class ParticipationRequest
     private $id;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
     private $Validated;
 
@@ -38,12 +38,12 @@ class ParticipationRequest
         return $this->id;
     }
 
-    public function getValidated(): ?bool
+    public function getValidated(): ?int
     {
         return $this->Validated;
     }
 
-    public function setValidated(bool $Validated): self
+    public function setValidated(int $Validated): self
     {
         $this->Validated = $Validated;
 
