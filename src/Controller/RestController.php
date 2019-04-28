@@ -25,22 +25,42 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class RestController extends AbstractController
 {
     /**
-     * @Route("test/{token}",name="test")
+     * @Route("test",name="test")
      */
-    public function test(Request $request, $token, ExperienceRepository $repo)
+    public function test(Request $request,  ExperienceRepository $repo)
     {
-        if($_POST["json"] && $_POST["json"] == $token)
-        {
+       // if($_POST["json"] && $_POST["json"] == $token)
+        //{
             $exp = $repo->findAll();
-            $encoders = [new XmlEncoder(), new JsonEncoder()];
-            $normalizers = [new ObjectNormalizer()];
-            
-            $serializer = new Serializer($normalizers, $encoders);
-            $jsonContent = $serializer->serialize($exp, 'json');
-            return new Response($jsonContent);
-        }
-        else{
-            return null;
-        }
+            return($this->json($exp,200,[],[
+                ObjectNormalizer::ATTRIBUTES => [
+                    'id',
+                    'Compensation',
+                    'Place',
+                    'Feedback',
+                    'FreeReq',
+                    'AgeReq',
+                    'SexReq',
+                    'SpecifiqReq',
+                    'researcher' =>[
+                        'id',
+                    ],
+                    'participants' => [
+                        'id'
+                    ],
+                    'messages' => [
+                        'id'
+                    ],
+                    'Name',
+                    'DateDebut',
+                    'datefin',
+                    'participationRequest' => [
+                        'id'
+                    ],
+                ]
+            ]));
+       // else{
+       //     return null;
+        //}
     }
 }
