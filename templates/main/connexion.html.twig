@@ -4,6 +4,9 @@
 
 <form action="{{path('security_login')}}" method="post">
     <legend>Connexion</legend>
+    {% if inactiveAccount %}
+    <div class="alert alert-danger"> {{ inactiveAccount }} </div>
+    {% endif %}
     <div class="form-group">
     
         <label>Email</label>
@@ -15,6 +18,10 @@
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-success">Connexion</button>
+    </div>
+    <div>
+    
+    
     </div>
 </form>
 

@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Service\RandomString;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ResearcherRepository")
+ * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields={"Mail"}, message="Cette adresse mail est déjà utilisée" )
  */
 class Researcher implements UserInterface
 {
@@ -22,11 +26,15 @@ class Researcher implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veuillez entrer un nom valide")
      */
     private $Lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veuillez entrer un prenom valide")
+     * @Assert\Length(min="2", minMessage="Votre mot de passe doit faire au minimum 2 caracteres")
+     * @Assert\Length(max="2", maxMessage="Faut pas deconner")
      */
     private $Firstname;
 
@@ -82,6 +90,21 @@ class Researcher implements UserInterface
     {
         $this->Experiences = new ArrayCollection();
         $this->messages = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prepersist()
+    {
+        if(empty($this->isActive))
+        {
+            $this->isActive = false;
+        }
+        if(empty($this->token))
+        {
+            $this->token = RandomString::Generate($this->Firstname,$this->Lastname);
+        }
     }
 
     public function getId(): ?int

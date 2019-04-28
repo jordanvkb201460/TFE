@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Experience;
 use App\Entity\Researcher;
 use App\Entity\Participant;
+use App\Form\ExperienceType;
 use App\Entity\ParticipationRequest;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\Repository\ResearcherRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
-use App\Form\ExperienceType;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class MainController extends AbstractController
@@ -23,6 +25,15 @@ class MainController extends AbstractController
      */
     public function index()
     {
+        if($this->getUser())
+        {
+            if(!$this->getUser()->getIsActive())
+            {
+                $cache = new FilesystemCache();
+                $cache->set("error", "Veuillez activer votre compte avant de vous logger" );
+                return $this->redirectToRoute("security_logout");
+            }
+        }
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
         ]);
@@ -63,7 +74,7 @@ class MainController extends AbstractController
     /**
      * @Route("/main/inscription", name="inscription")
      */
-    public function inscription(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder)
+    public function inscription(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
     {
         $researcher = new Researcher();
 
@@ -89,14 +100,17 @@ class MainController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            //$researcher->setId(1); //changer 
-            $researcher->setToken("test");
-            $researcher->setIsActive(true);
             $hash = $encoder->encodePassword($researcher, $researcher->getPassword());
             $researcher->setPAssword($hash);
             $manager->persist($researcher);
             $manager->flush();
-
+            
+            $this->addFlash("warning","Un mail de confirmation a été envoyé à l'adresse ".$researcher->getMail());
+            $message = (new \Swift_Message("Confirmation d'inscription"))
+                        ->setFrom("security@xpmobile.com")
+                        ->setTo($researcher->getMail())
+                        ->setBody($this->renderView("main/verifAccount.html.twig",["researcher"=>$researcher]),"text/html");
+            $mailer->send($message);
             return $this->redirectToRoute('security_login');
         }
 
@@ -194,7 +208,16 @@ class MainController extends AbstractController
     */
     public function login()
     {
-        return $this->render('main/connexion.html.twig');
+        $inactiveAccount = null;
+        $cache = new FilesystemCache();
+        if($cache->has("error"))
+        {
+            $inactiveAccount = $cache->get("error");
+            $cache->delete("error");    
+        }
+        return $this->render('main/connexion.html.twig',[
+        "inactiveAccount" => $inactiveAccount
+        ]);
     }
     
     /**
@@ -204,5 +227,23 @@ class MainController extends AbstractController
     {
         
     }
-   
+    
+    /**
+     * @Route("main/accountConfirm/{token}",name="account_confirm")
+     */
+    public function accountConfirm($token, ResearcherRepository $repo, ObjectManager $manager)
+    {
+        $researcher = $repo->findOneByToken($token);
+        /*
+            if(!$researcher)
+            {
+                return
+            }
+        */
+        $researcher->setIsActive(true);
+        $manager->persist($researcher);
+        $manager->flush();
+        $this->addFlash("success","Votre compte a été activé ");
+        return $this->redirectToRoute("security_login");
+    }
 }

@@ -1,0 +1,12 @@
+<h2>Hello {{ researcher.Firstname }} !</h2>
+
+<p>Merci d'avoir créer un compte sur XPMobile</p>
+<p>Voici un résumé de vos informations</p>
+<ul>
+    <li>First name : {{ researcher.Firstname }}</li>
+    <li>Last name : {{ researcher.Lastname }}</li>
+    <li>Department : {{ researcher.department}}</li>
+    <li>Status : {{ researcher.status }}</li>
+</ul>
+
+<a href="{{ url('account_confirm', { 'token': researcher.token }) }}">Please verifiy your account by clicking this link !</a>
