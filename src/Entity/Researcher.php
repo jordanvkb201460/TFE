@@ -34,7 +34,7 @@ class Researcher implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Veuillez entrer un prenom valide")
      * @Assert\Length(min="2", minMessage="Votre mot de passe doit faire au minimum 2 caracteres")
-     * @Assert\Length(max="2", maxMessage="Faut pas deconner")
+     * @Assert\Length(max="20", maxMessage="Faut pas deconner les noms aussi long ca existe pas")
      */
     private $Firstname;
 

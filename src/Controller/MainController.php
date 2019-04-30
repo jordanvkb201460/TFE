@@ -97,11 +97,12 @@ class MainController extends AbstractController
                      ->getForm();
 
         $form->handleRequest($request);
-
+        dump($form);
         if($form->isSubmitted() && $form->isValid())
         {
             $hash = $encoder->encodePassword($researcher, $researcher->getPassword());
             $researcher->setPAssword($hash);
+            dump($researcher);
             $manager->persist($researcher);
             $manager->flush();
             
@@ -115,7 +116,6 @@ class MainController extends AbstractController
         }
 
         return $this->render('main/inscription.html.twig',[
-            'authenticated' => true,
             'formUser' => $form->createView()
         ]);
     }
