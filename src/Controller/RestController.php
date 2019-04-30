@@ -25,9 +25,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class RestController extends AbstractController
 {
     /**
-     * @Route("test/{token}",name="test")
+     * @Route("test"&{token},name="test")
      */
-    public function test(Request $request, $token, ExperienceRepository $repo)
+    public function test(Request $request,$token,  ExperienceRepository $repo)
     {
         if($_POST["json"] && $_POST["json"] == $token)
         {

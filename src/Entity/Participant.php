@@ -58,6 +58,11 @@ class Participant
      */
     private $participationRequests;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $Password;
+
     public function __construct()
     {
         $this->Experiences = new ArrayCollection();
@@ -209,6 +214,18 @@ class Participant
                 $participationRequest->setIdParticipant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->Password;
+    }
+
+    public function setPassword(string $Password): self
+    {
+        $this->Password = $Password;
 
         return $this;
     }
