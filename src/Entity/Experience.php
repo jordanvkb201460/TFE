@@ -89,6 +89,11 @@ class Experience
      */
     private $datefin;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -326,6 +331,18 @@ class Experience
     public function setDatefin(?\DateTimeInterface $datefin): self
     {
         $this->datefin = $datefin;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }  

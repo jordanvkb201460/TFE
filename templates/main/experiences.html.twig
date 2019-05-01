@@ -4,11 +4,13 @@
 
 <div class = "list-group" style="padding : 1em">
 {% for experience in experiences %}
-<a href="{{path('displayExperience', {'id' : experience.id}) }}" class="list-group-item list-group-item-action" data-toggle="dropdown"> {{ experience.name }} <span class="badge badge-primary badge-pill" style = "float:right">1</span></a>
 
-
+{% if experience.isActive == true %}
+<a href="{{path('displayExperience', {'id' : experience.id}) }}" class="list-group-item list-group-item-action" data-toggle="dropdown"> {{ experience.name }} <span class="badge badge-primary badge-pill" style = "float:right"></span></a>
+{% elseif experience.isActive == false %}
+<a href="{{path('displayExperience', {'id' : experience.id}) }}" class="list-group-item  table-dark" data-toggle="dropdown"> {{ experience.name }} <span class="badge badge-primary badge-pill" style = "float:right">cloturée</span></a>
+{% endif %}
 {% endfor %}
-
 <footer style="padding : 5em 0 0 0" >
 <a class="btn btn-primary" href = "{{ path('createExp',{'id' : app.user.id, 'method' : 'create'}) }}">Create an experience</a>
 </footer>

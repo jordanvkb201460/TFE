@@ -4,9 +4,13 @@
 
 <div class="jumbotron" style="margin:40px;padding:10px 20px 50px 20px">
   <h3 class="display-3">{{ exp.name }}</h3>
+   {% if exp.isActive == 0 %}
+    <h2 class="card text-white bg-danger mb-3">Experience cloturée</h2>
+    {% endif %}
   <hr>
     <ul style="line-height:30px">
-        <li> <font size = "5">Compensation : {{exp.compensation}} €</font></li>
+   
+        <li> <font size = "5"> Compensation : {{exp.compensation}} €</font></li>
         <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
         <li> <font size = "5"> Sex requirement : {{ exp.sexReq }}  </font> </li>
         <li> <font size = "5"> Specifiq requirement : {{ exp.SpecifiqReq }}  </font> </li>
@@ -19,7 +23,11 @@
         <li> <font size = "5"> Date début : {{ exp.dateDebut | date("d/m/Y")}}  </font> </li>
         <li> <font size = "5"> Date fin : {{ exp.dateFin  | date("d/m/Y")}}  </font> </li>
     </ul>
-    <a href="{{path('modifyExp', {'id' : exp.id, 'method' : 'modify'}) }}" style="float:right" class="btn btn-primary">Modify</a>
+    
+    {% if exp.isActive == 1 %}
+    <a href="{{path('modifyExp', {'id' : exp.id, 'method' : 'modify'}) }}" style="float:right;margin:5px" class="btn btn-primary">Modify</a>
+    <a href="{{path('closeExp', {'idExp' : exp.id }) }}" style="float:right;margin:5px" class="btn btn-primary">Close</a>
+    {% endif %}
 </div>
 
 

@@ -47,8 +47,7 @@ class MainController extends AbstractController
         $test = true;
         $repo = $this->getDoctrine()->getRepository(Participant::class);
 
-        $participant = $repo->findOneBy(array("id" => $idExp));        
-        dump($validated);
+        $participant = $repo->findOneBy(array("id" => $idParticipant));    
 
         $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
 
@@ -57,15 +56,19 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
         $exp = $repo->findOneBy(array("id" => $idExp));
-       
+        
         $participationRq[0]->setValidated($validated);
+
+        if($validated == 1)
+        {
+            $participant->addExperience($exp);
+            //$exp->addParticipant($participant);
+        }
         $manager->persist($participationRq[0]);
         $manager->flush();
         
-        dump($participationRq);
 
         return $this->render('main/experience.html.twig',[
-            'authenticated' => true,
             'exp' => $exp,
             'participants' => $participationRq
         ]);
@@ -74,7 +77,7 @@ class MainController extends AbstractController
     /**
      * @Route("/main/inscription", name="inscription")
      */
-    public function inscription(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
+    public function inscription(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder)
     {
         $researcher = new Researcher();
 
@@ -97,21 +100,19 @@ class MainController extends AbstractController
                      ->getForm();
 
         $form->handleRequest($request);
-        dump($form);
         if($form->isSubmitted() && $form->isValid())
         {
             $hash = $encoder->encodePassword($researcher, $researcher->getPassword());
             $researcher->setPAssword($hash);
-            dump($researcher);
             $manager->persist($researcher);
             $manager->flush();
             
-            $this->addFlash("warning","Un mail de confirmation a été envoyé à l'adresse ".$researcher->getMail());
+            /*$this->addFlash("warning","Un mail de confirmation a été envoyé à l'adresse ".$researcher->getMail());
             $message = (new \Swift_Message("Confirmation d'inscription"))
                         ->setFrom("security@xpmobile.com")
                         ->setTo($researcher->getMail())
                         ->setBody($this->renderView("main/verifAccount.html.twig",["researcher"=>$researcher]),"text/html");
-            $mailer->send($message);
+            $mailer->send($message);*/
             return $this->redirectToRoute('security_login');
         }
 
@@ -142,13 +143,10 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
 
         $participationRq = $repo->findBy(array("IdExperience" => $id));
-        dump($participationRq);
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
         $exp = $repo->findOneBy(array("id" => $id));
         
-        dump($participationRq);
-
         return $this->render('main/experience.html.twig',[
             'exp' => $exp,
             'participants' => $participationRq
@@ -179,7 +177,6 @@ class MainController extends AbstractController
             $exp = $repo->findOneBy(array("id"=>$id)); // a changer
         }
         
-        //dump($researcher);
 
         $form = $this->createForm(ExperienceType::class, $exp);
 
@@ -189,6 +186,7 @@ class MainController extends AbstractController
         {
             if($method == "create")
             {
+                $exp->setIsActive(true);
                 $exp->setResearcher($researcher);
             }
             $manager->persist($exp);
@@ -245,5 +243,19 @@ class MainController extends AbstractController
         $manager->flush();
         $this->addFlash("success","Votre compte a été activé ");
         return $this->redirectToRoute("security_login");
+    }
+
+    /**
+     * @Route("main/experience/close/{idExp}",name="closeExp")
+     */
+    public function closeExp($idExp, ObjectManager $manager)
+    {
+        $repo = $this->getDoctrine()->getRepository(Experience::class);
+        $exp = $repo->findOneById($idExp);
+        $exp->setIsActive(false);
+        dump($exp);
+        $manager->persist($exp);
+        $manager->flush();
+        return $this->redirectToRoute('displayExperience', ['id'=> $exp->getId()]);
     }
 }
