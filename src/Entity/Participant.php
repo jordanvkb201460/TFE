@@ -64,6 +64,16 @@ class Participant implements UserInterface
      */
     private $Password;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $registerExperience;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $participatedExperience;
+
     public function __construct()
     {
         $this->Experiences = new ArrayCollection();
@@ -242,5 +252,29 @@ class Participant implements UserInterface
         public function getRoles()
         {
             return ['ROLE_USER'];
+        }
+
+        public function getRegisterExperience(): ?int
+        {
+            return $this->registerExperience;
+        }
+
+        public function setRegisterExperience(int $registerExperience): self
+        {
+            $this->registerExperience = $registerExperience;
+
+            return $this;
+        }
+
+        public function getParticipatedExperience(): ?int
+        {
+            return $this->participatedExperience;
+        }
+
+        public function setParticipatedExperience(int $participatedExperience): self
+        {
+            $this->participatedExperience = $participatedExperience;
+
+            return $this;
         }
 }
