@@ -1,5 +1,7 @@
 security:
     encoders : 
+        App\Entity\Participant :
+                        algorithm : bcrypt
         App\Entity\Researcher :
                         algorithm : bcrypt
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers

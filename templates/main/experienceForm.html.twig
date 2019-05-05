@@ -10,13 +10,16 @@ Formulaire Experience
 
     {{ form_start(formExp) }}
     <legend>Creation d'une expérience</legend>
+    
     {{ form_row(formExp.Name,{'attr': {'placeholder':'Name'}})}}
-    {{ form_row(formExp.Compensation,{'attr': {'placeholder':'Compensation'}})}}
+    {{ form_row(formExp.FreeReq,{'label' : 'Pas de trucs en particuliers','attr': {'placeholder':'FreeReq'}})}}
+    
     {{ form_row(formExp.FeedBack,{'attr': {'placeholder':'FeedBack'}})}}
-    {{ form_row(formExp.AgeReq,{'attr': {'placeholder':'AgeReq'}})}}
-    {{ form_row(formExp.SexReq,{'attr': {'placeholder':'SexReq'}})}}
-    {{ form_row(formExp.SpecifiqReq,{'attr': {'placeholder':'SpecifiqReq'}})}}
-    {{ form_row(formExp.FreeReq,{'attr': {'placeholder':'FreeReq'}})}}
+
+    {{ form_row(formExp.AgeReq,{'label' : 'Age minimal requis','attr': {'placeholder':'AgeReq'}})}}
+    {{ form_row(formExp.SexReq,{'label' : 'Sex requis','attr': {'placeholder':'SexReq'}})}}
+    {{ form_row(formExp.SpecifiqReq,{'label' : 'Traits spécifiques requis','attr': {'placeholder':'SpecifiqReq'}})}}
+    {{ form_row(formExp.Compensation,{'attr': {'placeholder':'Compensation'}})}}
     {{ form_row(formExp.Place,{'attr': {'placeholder':'Place'}})}}
     {{ form_row(formExp.DateDebut,{'attr': {'placeholder':'Place'}})}}
     {{ form_row(formExp.DateFin,{'attr': {'placeholder':'Place'}})}}
