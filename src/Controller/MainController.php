@@ -225,12 +225,20 @@ class MainController extends AbstractController
     public function loginJson(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $repo = $this->getDoctrine()->getRepository(Participant::class);
-        $participant = $repo->findOneBy(array("id"=>5));
+        $participant = $repo->findOneBy(array("id"=>$data['username']));
         $data = json_decode($request->getContent(), true);
         $mdp = $data['password'];
         $check = $encoder->isPasswordValid($participant,$mdp);
-        return($this->json($check,200,[],[
-            ]));
+        if($check)
+        {
+            return($this->json($participant,200,[],[
+                ]));
+        }
+        else
+        {
+            return ($this->json("error",400,[],[]));
+        }
+        
     }
     
     /**
