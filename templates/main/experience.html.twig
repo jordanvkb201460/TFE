@@ -37,10 +37,15 @@
    {% for participant in participants %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
       {{participant.IdParticipant.Lastname}}
-
+      {{participant.idParticipant.Firstname}}
+      Email : {{participant.idParticipant.Mail}}
+        Age : {{participant.idParticipant.Age}}
+        Sexe : {{participant.idParticipant.Sex}}
       <span>
+        
         Rating : 
         {% if participant.IdParticipant.participatedExperience == 0 %}
+         trop peu d'infos
         {% else %}
         {{(participant.IdParticipant.participatedExperience / participant.IdParticipant.registerExperience * 100) | number_format(2,'.',',')}}%
         {% endif %}
