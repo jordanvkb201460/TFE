@@ -16,6 +16,7 @@ use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -189,6 +190,7 @@ class MainController extends AbstractController
             if($method == "create")
             {
                 $exp->setResearcher($researcher);
+                $exp->setIsActive(true);
             }
             $manager->persist($exp);
             $manager->flush();
@@ -225,12 +227,42 @@ class MainController extends AbstractController
     public function loginJson(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $repo = $this->getDoctrine()->getRepository(Participant::class);
-        $participant = $repo->findOneBy(array("id"=>5));
         $data = json_decode($request->getContent(), true);
+        $participant = $repo->findOneBy(array("Mail"=>$data['username']));
+       
         $mdp = $data['password'];
         $check = $encoder->isPasswordValid($participant,$mdp);
-        return($this->json($check,200,[],[
-            ]));
+        if($check)
+        {
+            return($this->json($participant,200,[],[ObjectNormalizer::ATTRIBUTES => [
+                'id',
+                'Lastname',
+                'Firstname',
+                'Age',
+                'Sex',
+                'Mail',
+                'experiences' =>[
+                    'id',
+                ],
+                'Message' => [
+                    'id'
+                ],
+                'participationRequests' => [
+                    'id',
+                    'IdExperience'=>[
+                        'id'
+                        
+                    ],
+                    'Validated'
+                ],
+            ]
+                ]));
+        }
+        else
+        {
+            return ($this->json("error",400,[],[]));
+        }
+        
     }
     
     /**
