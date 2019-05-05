@@ -44,6 +44,7 @@ class RestController extends AbstractController
                     'AgeReq',
                     'SexReq',
                     'SpecifiqReq',
+                    'IsActive',
                     'researcher' =>[
                         'id',
                     ],
