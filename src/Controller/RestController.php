@@ -58,7 +58,8 @@ class RestController extends AbstractController
                     'DateDebut',
                     'datefin',
                     'participationRequest' => [
-                        'id'
+                        'id',
+                        'Validated'
                     ],
                 ]
             ]));
@@ -75,7 +76,7 @@ class RestController extends AbstractController
     {
         $request->getContent();
         $data = json_decode($request->getContent(), true);
-        dump($data["Mail"]);
+        dump($data);
         $participant = new Participant();
         $participant->setFirstname($data["Firstname"]);
         $participant->setLastname($data["Lastname"]);

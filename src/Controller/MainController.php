@@ -16,6 +16,7 @@ use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -189,6 +190,7 @@ class MainController extends AbstractController
             if($method == "create")
             {
                 $exp->setResearcher($researcher);
+                $exp->setIsActive(true);
             }
             $manager->persist($exp);
             $manager->flush();
@@ -225,13 +227,43 @@ class MainController extends AbstractController
     public function loginJson(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $repo = $this->getDoctrine()->getRepository(Participant::class);
+<<<<<<< HEAD
         $participant = $repo->findOneBy(array("id"=>$data['username']));
+=======
+>>>>>>> e6d29627fbbe608731edb990061126bfc0056681
         $data = json_decode($request->getContent(), true);
+        $participant = $repo->findOneBy(array("Mail"=>$data['username']));
+       
         $mdp = $data['password'];
         $check = $encoder->isPasswordValid($participant,$mdp);
         if($check)
         {
+<<<<<<< HEAD
             return($this->json($participant,200,[],[
+=======
+            return($this->json($participant,200,[],[ObjectNormalizer::ATTRIBUTES => [
+                'id',
+                'Lastname',
+                'Firstname',
+                'Age',
+                'Sex',
+                'Mail',
+                'experiences' =>[
+                    'id',
+                ],
+                'Message' => [
+                    'id'
+                ],
+                'participationRequests' => [
+                    'id',
+                    'IdExperience'=>[
+                        'id'
+                        
+                    ],
+                    'Validated'
+                ],
+            ]
+>>>>>>> e6d29627fbbe608731edb990061126bfc0056681
                 ]));
         }
         else
