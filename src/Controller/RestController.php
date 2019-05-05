@@ -44,7 +44,11 @@ class RestController extends AbstractController
                     'AgeReq',
                     'SexReq',
                     'SpecifiqReq',
+<<<<<<< HEAD
                     'IsActive',
+=======
+                    'isActive',
+>>>>>>> ada672154dcde0d18a497e6982765f479fbc3874
                     'researcher' =>[
                         'id',
                     ],
@@ -71,7 +75,7 @@ class RestController extends AbstractController
      /**
      * @Route("inscriptionParticipant",name="inscriptionParticipant")
      */
-    public function inscriptionParticipant(Request $request,  ParticipantRepository $repo, ObjectManager $manager)
+    public function inscriptionParticipant(Request $request,  ParticipantRepository $repo, ObjectManager $manager, UserPasswordEncoderInterface $encoder)
     {
         $request->getContent();
         $data = json_decode($request->getContent(), true);
@@ -82,6 +86,9 @@ class RestController extends AbstractController
         $participant->setMail($data["Mail"]);
         $participant->setSex($data["Sex"]);
         $participant->setAge($data["Age"]);
+        $participant->setPassword($data["Password"]);
+        $hash = $encoder->encodePassword($participant, $participant->getPassword());
+        $participant->setPAssword($hash);
 
         
         $manager->persist($participant);

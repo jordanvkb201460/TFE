@@ -10,6 +10,7 @@ use App\Entity\ParticipationRequest;
 use App\Repository\ResearcherRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -77,7 +78,7 @@ class MainController extends AbstractController
     /**
      * @Route("/main/inscription", name="inscription")
      */
-    public function inscription(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder)
+    public function inscription(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
     {
         $researcher = new Researcher();
 
@@ -107,12 +108,12 @@ class MainController extends AbstractController
             $manager->persist($researcher);
             $manager->flush();
             
-            /*$this->addFlash("warning","Un mail de confirmation a été envoyé à l'adresse ".$researcher->getMail());
+            $this->addFlash("warning","Un mail de confirmation a été envoyé à l'adresse ".$researcher->getMail());
             $message = (new \Swift_Message("Confirmation d'inscription"))
                         ->setFrom("security@xpmobile.com")
                         ->setTo($researcher->getMail())
                         ->setBody($this->renderView("main/verifAccount.html.twig",["researcher"=>$researcher]),"text/html");
-            $mailer->send($message);*/
+            $mailer->send($message);
             return $this->redirectToRoute('security_login');
         }
 
@@ -177,6 +178,7 @@ class MainController extends AbstractController
             $exp = $repo->findOneBy(array("id"=>$id)); // a changer
         }
         
+        //dump($researcher);
 
         $form = $this->createForm(ExperienceType::class, $exp);
 
@@ -186,7 +188,6 @@ class MainController extends AbstractController
         {
             if($method == "create")
             {
-                $exp->setIsActive(true);
                 $exp->setResearcher($researcher);
             }
             $manager->persist($exp);
@@ -216,6 +217,20 @@ class MainController extends AbstractController
         return $this->render('main/connexion.html.twig',[
         "inactiveAccount" => $inactiveAccount
         ]);
+    }
+
+     /**
+    * @Route("/onsenfout", name="security_login_json")
+    */
+    public function loginJson(Request $request, UserPasswordEncoderInterface $encoder)
+    {
+        $repo = $this->getDoctrine()->getRepository(Participant::class);
+        $participant = $repo->findOneBy(array("id"=>5));
+        $data = json_decode($request->getContent(), true);
+        $mdp = $data['password'];
+        $check = $encoder->isPasswordValid($participant,$mdp);
+        return($this->json($check,200,[],[
+            ]));
     }
     
     /**
