@@ -33,6 +33,11 @@ class ParticipationRequest
      */
     private $IdExperience;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $Status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +75,18 @@ class ParticipationRequest
     public function setIdExperience(?Experience $IdExperience): self
     {
         $this->IdExperience = $IdExperience;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->Status;
+    }
+
+    public function setStatus(int $Status): self
+    {
+        $this->Status = $Status;
 
         return $this;
     }

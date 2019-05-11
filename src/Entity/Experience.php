@@ -59,11 +59,7 @@ class Experience
      */
     private $researcher;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Participant", mappedBy="Experiences")
-     */
-    private $participants;
-
+   
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="InRelationWith", orphanRemoval=true)
      */
@@ -94,11 +90,13 @@ class Experience
      */
     private $isActive;
 
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->participationRequests = new ArrayCollection();
+        $this->participantExperiences = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -345,5 +343,5 @@ class Experience
         $this->isActive = $isActive;
 
         return $this;
-    }  
+    }
 }

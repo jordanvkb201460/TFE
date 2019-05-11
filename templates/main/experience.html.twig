@@ -42,14 +42,28 @@
         Age : {{participant.idParticipant.Age}}
         Sexe : {{participant.idParticipant.Sex}}
       <span>
-        
-        Rating : 
-        {% if participant.IdParticipant.participatedExperience == 0 %}
-         trop peu d'infos
-        {% else %}
-        {{(participant.IdParticipant.participatedExperience / participant.IdParticipant.registerExperience * 100) | number_format(2,'.',',')}}%
+        {% if participant.status == 1 %}
+         <a href="{{path('participationToAnExperience', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "3"}) }}" type="button" class="btn btn-success">A participé</a>
+        <a href="{{path('participationToAnExperience', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "4"}) }}" type="button" class="btn btn-danger">N'a pas participer</a>
+        {% elseif participant.status == 3 %}
+        A participé
+        {% elseif participant.status == 4 %}
+        N'a pas participé
         {% endif %}
-
+        Rating : 
+        {% set countParticipated = 0 %}
+        {% set countRegistered = 0 %}
+        {% for tmp in participant.idParticipant.participationRequests %}
+        {% if tmp.status == 4 %}
+        {% set countParticipated = countParticipated + 1 %}
+        {% elseif tmp.status == 3 %}
+        {% set countRegistered = countRegistered + 1 %}
+        {% endif %}
+        {% endfor %}
+        {% if countRegistered   + countParticipated  == 0 %}
+        {% else %}
+        {{ (countRegistered / (countRegistered + countParticipated)  * 100) | number_format(2,'.',',')}}%
+        {% endif %}
         {% if participant.Validated == 1 %}
         Inscription validée
         {%  elseif participant.Validated == 3 %}
