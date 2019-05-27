@@ -12,7 +12,8 @@ Formulaire Experience
     <legend>Creation d'une expérience</legend>
     
     {{ form_row(formExp.Name,{'attr': {'placeholder':'Name'}})}}
-    {{ form_row(formExp.FreeReq,{'label' : 'Pas de trucs en particuliers','attr': {'placeholder':'FreeReq'}})}}
+    {{ form_row(formExp.Description,{'label' : 'Description','attr': {'placeholder':'Description'}})}}
+    {{ form_row(formExp.FreeReq,{'label' : 'Pas de critères spécifiques','attr': {'placeholder':'FreeReq'}})}}
     
     {{ form_row(formExp.FeedBack,{'attr': {'placeholder':'FeedBack'}})}}
 
@@ -23,8 +24,7 @@ Formulaire Experience
     {{ form_row(formExp.Place,{'attr': {'placeholder':'Place'}})}}
     {{ form_row(formExp.DateDebut,{'attr': {'placeholder':'Place'}})}}
     {{ form_row(formExp.DateFin,{'attr': {'placeholder':'Place'}})}}
-    
-
+    {{ form_row(formExp.Test,{'label' : 'je m\'engage à ce que mes critères ne soient pas discriminants'})}}
     <button type="submit" class="btn btn-success">Submit</button>
 
     {{ form_end(formExp) }}

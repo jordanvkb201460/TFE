@@ -42,8 +42,49 @@ class MainController extends AbstractController
         ]);
     }
 
+   
+
+
      /**
-     * @Route("/main/experience/{idExp}&{idParticipant}&{validated}", name="participationToAnExperience")
+     * @Route("/main/acceptRequest/{idExp}&{idParticipant}&{validated}", name="acceptRequest")
+     */
+    public function request($idExp, $idParticipant,$validated, ObjectManager $manager)
+    {
+
+        $test = true;
+
+        $repo = $this->getDoctrine()->getRepository(Participant::class);
+
+        $participant = $repo->findOneBy(array("id" => $idParticipant));    
+
+        $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
+
+        $participationRq = $repo->findBy(array("IdExperience" => $idExp, "IdParticipant" => $idParticipant));
+        
+        $repo = $this->getDoctrine()->getRepository(Experience::class);
+
+        $exp = $repo->findOneBy(array("id" => $idExp));
+
+        $participationRq[0]->setValidated($validated);
+
+        if($validated == 1)
+        {
+            $participationRq[0]->setStatus(1);
+        }
+        else if($validated == 2)
+        {
+            $participationRq[0]->setStatus(2);
+        }
+        $manager->persist($participationRq[0]);
+        $manager->flush();
+        
+       return $this-> redirectToRoute('displayExperience',[
+           'id' => $idExp
+        ]);
+    }
+
+      /**
+     * @Route("/main/participationToAnExperience/{idExp}&{idParticipant}&{validated}", name="participationToAnExperience")
      */
     public function ConfirmParticipation($idExp, $idParticipant,$validated, ObjectManager $manager)
     {
@@ -63,42 +104,6 @@ class MainController extends AbstractController
         return $this-> redirectToRoute('displayExperience',[
             'id' => $idExp
          ]);
-    }
-
-
-     /**
-     * @Route("/main/experience/{idExp}&{idParticipant}&{validated}", name="acceptRequest")
-     */
-    public function request($idExp, $idParticipant,$validated, ObjectManager $manager)
-    {
-        $test = true;
-        $repo = $this->getDoctrine()->getRepository(Participant::class);
-
-        $participant = $repo->findOneBy(array("id" => $idParticipant));    
-
-        $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
-
-        $participationRq = $repo->findBy(array("IdExperience" => $idExp, "IdParticipant" => $idParticipant));
-        
-        $repo = $this->getDoctrine()->getRepository(Experience::class);
-
-        $exp = $repo->findOneBy(array("id" => $idExp));
-
-        $participationRq[0]->setValidated($validated);
-
-        if($validated == 1)
-        {
-            $participationRq->setStatus(1);
-        }
-        else if($validated == 2){
-            $participationRq->setStatus(2);
-        }
-        $manager->persist($participationRq[0]);
-        $manager->flush();
-        
-       return $this-> redirectToRoute('displayExperience',[
-           'id' => $idExp
-        ]);
     }
 
     /**
@@ -173,7 +178,7 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
         $exp = $repo->findOneBy(array("id" => $id));
-
+        dump($participationRq);
         
         return $this->render('main/experience.html.twig',[
             'exp' => $exp,
@@ -190,6 +195,7 @@ class MainController extends AbstractController
      */
     public function experience($id,$method, Request $request, Objectmanager $manager)
     {
+        
         if($method == "create")
         {
             $repo = $this->getDoctrine()->getRepository(Researcher::class);
@@ -213,6 +219,8 @@ class MainController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
+            dump($form);
+            die();
             if($method == "create")
             {
                 $exp->setResearcher($researcher);

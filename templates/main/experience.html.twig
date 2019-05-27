@@ -11,15 +11,16 @@
     <ul style="line-height:30px">
    
         <li> <font size = "5"> Compensation : {{exp.compensation}} €</font></li>
-        <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
-        <li> <font size = "5"> Sex requirement : {{ exp.sexReq }}  </font> </li>
-        <li> <font size = "5"> Specifiq requirement : {{ exp.SpecifiqReq }}  </font> </li>
         <li> <font size = "5"> Free requirement : 
         {% if exp.freeReq == 1 %}
         Yes
         {%  else %}
         No
+        <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
+        <li> <font size = "5"> Sex requirement : {{ exp.sexReq }}  </font> </li>
+        <li> <font size = "5"> Specifiq requirement : {{ exp.SpecifiqReq }}  </font> </li>
         {% endif %}</font></li>
+        
         <li> <font size = "5"> Date début : {{ exp.dateDebut | date("d/m/Y")}}  </font> </li>
         <li> <font size = "5"> Date fin : {{ exp.dateFin  | date("d/m/Y")}}  </font> </li>
     </ul>
@@ -64,14 +65,15 @@
         {% else %}
         {{ (countRegistered / (countRegistered + countParticipated)  * 100) | number_format(2,'.',',')}}%
         {% endif %}
-        {% if participant.Validated == 1 %}
-        Inscription validée
-        {%  elseif participant.Validated == 3 %}
+       
+        {%  if participant.Status == 0 %}
         Inscription en attente
-        {%  else %}
+        {%  elseif participant.Status == 2 %}
         Inscription refusée
+         {% else %}
+        Inscription validée
         {% endif %}
-        {% if participant.Validated == 3 %}
+        {% if participant.Status == 0 %}
         <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "1"}) }}" type="button" class="btn btn-success">Accepter</a>
         <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "2"}) }}" type="button" class="btn btn-danger">Refuser</a>
         {% endif %}

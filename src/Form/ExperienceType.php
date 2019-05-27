@@ -10,6 +10,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Validator\Constraints\IsTrue;
 
 class ExperienceType extends AbstractType
 {
@@ -28,10 +30,19 @@ class ExperienceType extends AbstractType
                    'Femme'=>'F',
                 ]
             ])
+            ->add('Description',TextareaType::class)
             ->add('SpecifiqReq')
             ->add('Name')
             ->add('DateDebut', DateType::class)
             ->add('DateFin', DateType::class)
+            ->add('Test', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'constraints' => array(new IsTrue(
+                    array('message' => 'Veuillez cocher cette case')
+                )
+                )
+            ])
         ;
     }
 

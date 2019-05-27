@@ -90,10 +90,14 @@ class Experience
      */
     private $isActive;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $Description;
+
 
     public function __construct()
     {
-        $this->participants = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->participationRequests = new ArrayCollection();
         $this->participantExperiences = new ArrayCollection();
@@ -207,33 +211,7 @@ class Experience
         return $this;
     }
 
-    /**
-     * @return Collection|Participant[]
-     */
-    public function getParticipants(): Collection
-    {
-        return $this->participants;
-    }
-
-    public function addParticipant(Participant $participant): self
-    {
-        if (!$this->participants->contains($participant)) {
-            $this->participants[] = $participant;
-            $participant->addExperience($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(Participant $participant): self
-    {
-        if ($this->participants->contains($participant)) {
-            $this->participants->removeElement($participant);
-            $participant->removeExperience($this);
-        }
-
-        return $this;
-    }
+ 
 
     /**
      * @return Collection|Message[]
@@ -341,6 +319,18 @@ class Experience
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(?string $Description): self
+    {
+        $this->Description = $Description;
 
         return $this;
     }

@@ -111,6 +111,7 @@ class RestController extends AbstractController
         $participant = $repo->findOneBy(['id' => $tmp]);
         $participantRq->setIdParticipant($participant);
         $participantRq->setValidated($data["Validated"]);
+        $participantRq->setStatus($data["Status"]);
 
 
         
