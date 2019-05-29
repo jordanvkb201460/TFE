@@ -95,6 +95,11 @@ class Experience
      */
     private $Description;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $Token;
+
 
     public function __construct()
     {
@@ -331,6 +336,18 @@ class Experience
     public function setDescription(?string $Description): self
     {
         $this->Description = $Description;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->Token;
+    }
+
+    public function setToken(?string $Token): self
+    {
+        $this->Token = $Token;
 
         return $this;
     }

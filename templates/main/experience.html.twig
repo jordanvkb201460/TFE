@@ -26,8 +26,8 @@
     </ul>
     
     {% if exp.isActive == 1 %}
-    <a href="{{path('modifyExp', {'id' : exp.id, 'method' : 'modify'}) }}" style="float:right;margin:5px" class="btn btn-primary">Modify</a>
-    <a href="{{path('closeExp', {'idExp' : exp.id }) }}" style="float:right;margin:5px" class="btn btn-primary">Close</a>
+    <a href="{{path('modifyExp', {'id' : exp.Token, 'method' : 'modify'}) }}" style="float:right;margin:5px" class="btn btn-primary">Modify</a>
+    <a href="{{path('closeExp', {'idExp' : exp.Token }) }}" style="float:right;margin:5px" class="btn btn-primary">Close</a>
     {% endif %}
 </div>
 
