@@ -13,9 +13,7 @@ class RandomString
         {
             $randomString .= $characters[mt_rand(0,$characterLength-1)];
         }
-        //probleme pour personne ayant le meme nom et prenom
-        $randomString .= strval($nom);
-        $randomString .= strval($prenom);
+        
         return $randomString;
     }
 }

@@ -6,6 +6,7 @@ use App\Entity\Experience;
 use App\Entity\Researcher;
 use App\Entity\Participant;
 use App\Form\ExperienceType;
+use App\Service\RandomString;
 use App\Entity\ParticipationRequest;
 use App\Entity\ParticipantExperience;
 use App\Repository\ResearcherRepository;
@@ -250,6 +251,7 @@ class MainController extends AbstractController
             $inactiveAccount = $cache->get("error");
             $cache->delete("error");    
         }
+        
         return $this->render('main/connexion.html.twig',[
         "inactiveAccount" => $inactiveAccount
         ]);
