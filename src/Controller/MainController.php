@@ -21,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Service\RandomString;
 
 class MainController extends AbstractController
 {
@@ -137,6 +138,9 @@ class MainController extends AbstractController
         {
             $hash = $encoder->encodePassword($researcher, $researcher->getPassword());
             $researcher->setPAssword($hash);
+            $rdnstr = new RandomString();
+            $str = $rdnstr->Generate();
+            $researcher->setToken($str);
             $manager->persist($researcher);
             $manager->flush();
             
@@ -159,9 +163,13 @@ class MainController extends AbstractController
      */
     public function getAllExperienceByResearcher($idResearcher)
     {
+        $repo = $this->getDoctrine()->getRepository(Researcher::class);
+
+        $researcher = $repo->findBy(array("token" => $idResearcher));
+
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
-        $exp = $repo->findBy(array("researcher" => $idResearcher));
+        $exp = $repo->findBy(array("researcher" => $researcher[0]->getId()));
 
         return $this->render('main/experiences.html.twig',[
             'experiences' => $exp,
@@ -173,13 +181,14 @@ class MainController extends AbstractController
      */
     public function displayExperience($id)
     {
-        $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
-
-        $participationRq = $repo->findBy(array("IdExperience" => $id));
+       
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
-        $exp = $repo->findOneBy(array("id" => $id));
-        dump($participationRq);
+        $exp = $repo->findOneBy(array("Token" => $id));
+
+        $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
+
+        $participationRq = $repo->findBy(array("IdExperience" => $exp->getId()));
         
         return $this->render('main/experience.html.twig',[
             'exp' => $exp,
@@ -201,7 +210,7 @@ class MainController extends AbstractController
         {
             $repo = $this->getDoctrine()->getRepository(Researcher::class);
 
-            $researcher = $repo->findOneBy(array("id"=>$id)); // a changer
+            $researcher = $repo->findOneBy(array("token"=>$id)); // a changer
 
             $exp = new Experience();
         }
@@ -209,7 +218,7 @@ class MainController extends AbstractController
         {
             $repo = $this->getDoctrine()->getRepository(Experience::class);
 
-            $exp = $repo->findOneBy(array("id"=>$id)); // a changer
+            $exp = $repo->findOneBy(array("Token"=>$id)); // a changer
         }
         
         //dump($researcher);
@@ -220,10 +229,10 @@ class MainController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid())
         {
-            dump($form);
-            die();
             if($method == "create")
             {
+                $rndstr = new RandomString();
+                $exp->setToken($rndstr->Generate());
                 $exp->setResearcher($researcher);
                 $exp->setIsActive(true);
             }
@@ -260,7 +269,7 @@ class MainController extends AbstractController
      /**
     * @Route("/onsenfout", name="security_login_json")
     */
-    public function loginJson(Request $request, UserPasswordEncoderInterface $encoder)
+    public function loginJson(Objectmanager $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
         $repo = $this->getDoctrine()->getRepository(Participant::class);
         $data = json_decode($request->getContent(), true);
@@ -270,6 +279,10 @@ class MainController extends AbstractController
         $check = $encoder->isPasswordValid($participant,$mdp);
         if($check)
         {
+            $rdmstr = new RandomString();
+            $participant->setToken($rdmstr->Generate());
+            $manager->persist($participant);
+            $manager->flush();
             return($this->json($participant,200,[],[ObjectNormalizer::ATTRIBUTES => [
                 'id',
                 'Lastname',
@@ -291,6 +304,7 @@ class MainController extends AbstractController
                     ],
                     'Validated'
                 ],
+                'token'
             ]
                 ]));
         }
@@ -299,6 +313,20 @@ class MainController extends AbstractController
             return ($this->json("error",400,[],[]));
         }
         
+    }
+
+    /**
+     * @Route("/logoutjson", name="security_logout_json")
+     */
+    public function logout_json(Request $request, Objectmanager $manager)
+    {
+        $repo = $this->getDoctrine()->getRepository(Participant::class);
+        $data = json_decode($request->getContent(), true);
+        $participant = $repo->findOneBy(array("token"=>$data['token']));
+        $participant->setToken("");
+        $manager->persist($participant);
+        $manager->flush();
+        return ($this->json("succes",200,[],[]));
     }
     
     /**
@@ -334,11 +362,11 @@ class MainController extends AbstractController
     public function closeExp($idExp, ObjectManager $manager)
     {
         $repo = $this->getDoctrine()->getRepository(Experience::class);
-        $exp = $repo->findOneById($idExp);
+        $exp = $repo->findOneBy(array("Token" => $idExp));
         $exp->setIsActive(false);
         dump($exp);
         $manager->persist($exp);
         $manager->flush();
-        return $this->redirectToRoute('displayExperience', ['id'=> $exp->getId()]);
+        return $this->redirectToRoute('displayExperience', ['id'=> $exp->getToken()]);
     }
 }

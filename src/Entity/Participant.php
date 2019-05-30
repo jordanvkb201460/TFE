@@ -59,6 +59,11 @@ class Participant implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $participatedExperience;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
     public function __construct()
     {
         $this->Experiences = new ArrayCollection();
@@ -219,6 +224,18 @@ class Participant implements UserInterface
         public function setParticipatedExperience(int $participatedExperience): self
         {
             $this->participatedExperience = $participatedExperience;
+            return $this;
+        }
+
+        public function getToken(): ?string
+        {
+            return $this->token;
+        }
+
+        public function setToken(?string $token): self
+        {
+            $this->token = $token;
+
             return $this;
         }
 }

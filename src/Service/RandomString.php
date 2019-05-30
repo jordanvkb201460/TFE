@@ -4,7 +4,7 @@ namespace App\Service;
 
 class RandomString 
 {
-    public static function Generate($nom,$prenom, $length=20)
+    public static function Generate($length=20)
     {
         $characters = "azertyuiopqsdfghjklmwxcvbn1234567890AZERTYUIOPQSDFGHJKLMWXCVBN";
         $characterLength = strlen($characters);
@@ -13,7 +13,6 @@ class RandomString
         {
             $randomString .= $characters[mt_rand(0,$characterLength-1)];
         }
-        
         return $randomString;
     }
 }

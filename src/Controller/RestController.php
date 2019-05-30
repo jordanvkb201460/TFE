@@ -108,7 +108,7 @@ class RestController extends AbstractController
         $participantRq->setIdExperience($exp);
         $repo = $this->getDoctrine()->getRepository(Participant::class);
         $tmp = $data["IdParticipant"];
-        $participant = $repo->findOneBy(['id' => $tmp]);
+        $participant = $repo->findOneBy(['token' => $tmp]);
         $participantRq->setIdParticipant($participant);
         $participantRq->setValidated($data["Validated"]);
         $participantRq->setStatus($data["Status"]);
