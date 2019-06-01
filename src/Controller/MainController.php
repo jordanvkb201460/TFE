@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Experience;
 use App\Entity\Researcher;
 use App\Entity\Participant;
 use App\Form\ExperienceType;
+use App\Service\RandomString;
 use App\Entity\ParticipationRequest;
 use App\Entity\ParticipantExperience;
 use App\Repository\ResearcherRepository;
@@ -20,7 +22,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Service\RandomString;
 
 class MainController extends AbstractController
 {
@@ -188,6 +189,12 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
 
         $participationRq = $repo->findBy(array("IdExperience" => $exp->getId()));
+
+        foreach($participationRq as $tmp)
+        {
+            $tmp2 = $tmp->getIdParticipant();
+            $tmp2->setAge(date_diff($tmp2->getBirthDate(), new DateTime('now'))->y);
+        }
         
         return $this->render('main/experience.html.twig',[
             'exp' => $exp,
@@ -238,7 +245,7 @@ class MainController extends AbstractController
             $manager->persist($exp);
             $manager->flush();
 
-            return $this->redirectToRoute('displayExperience', ['id'=> $exp->getId()]);
+            return $this->redirectToRoute('displayExperience', ['id'=> $exp->getToken()]);
         }
 
         return $this->render('main/experienceForm.html.twig',[
@@ -302,7 +309,8 @@ class MainController extends AbstractController
                     ],
                     'Validated'
                 ],
-                'token'
+                'token',
+                'BirthDate'
             ]
                 ]));
         }
