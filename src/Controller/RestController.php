@@ -27,6 +27,72 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class RestController extends AbstractController
 {
     /**
+     * @Route("/logoutjson", name="security_logout_json")
+     */
+    public function logoutJson(Request $request, Objectmanager $manager)
+    {
+        $repo = $this->getDoctrine()->getRepository(Participant::class);
+        $data = json_decode($request->getContent(), true);
+        $participant = $repo->findOneBy(array("token"=>$data['token']));
+        $participant->setToken("");
+        $manager->persist($participant);
+        $manager->flush();
+        return ($this->json("succes",200,[],[]));
+    }
+
+
+    /**
+    * @Route("/onsenfout", name="security_login_json")
+    */
+    public function loginJson(Objectmanager $manager, Request $request, UserPasswordEncoderInterface $encoder)
+    {
+        $repo = $this->getDoctrine()->getRepository(Participant::class);
+        $data = json_decode($request->getContent(), true);
+        $participant = $repo->findOneBy(array("Mail"=>$data['username']));
+       
+        $mdp = $data['password'];
+        $check = $encoder->isPasswordValid($participant,$mdp);
+        if($check)
+        {
+            $rdmstr = new RandomString();
+            $participant->setToken($rdmstr->Generate());
+            $manager->persist($participant);
+            $manager->flush();
+            return($this->json($participant,200,[],[ObjectNormalizer::ATTRIBUTES => [
+                'id',
+                'Lastname',
+                'Firstname',
+                'Age',
+                'Sex',
+                'Mail',
+                'experiences' =>[
+                    'id',
+                ],
+                'Message' => [
+                    'id'
+                ],
+                'participationRequests' => [
+                    'id',
+                    'IdExperience'=>[
+                        'id'
+                        
+                    ],
+                    'Validated'
+                ],
+                'token',
+                'BirthDate'
+            ]
+                ]));
+        }
+        else
+        {
+            return ($this->json("error",400,[],[]));
+        }
+        
+    }
+
+
+    /**
      * @Route("getExperiences",name="getExperiences")
      */
     public function getExperiences(ExperienceRepository $repo)

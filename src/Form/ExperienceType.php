@@ -35,7 +35,7 @@ class ExperienceType extends AbstractType
             ->add('Name')
             ->add('DateDebut', DateType::class)
             ->add('DateFin', DateType::class)
-            ->add('Test', CheckboxType::class, [
+            ->add('Check', CheckboxType::class, [
                 'mapped' => false,
                 'required' => false,
                 'constraints' => array(new IsTrue(

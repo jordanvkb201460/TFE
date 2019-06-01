@@ -16,7 +16,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -131,6 +133,12 @@ class MainController extends AbstractController
                              'Enseignant'=>'Enseignant'
                          ]
                      ])
+                     ->add('RGPD', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'constraints' => array(new IsTrue(
+                    array('message' => 'Veuillez cocher cette case')
+                ))])
                      ->getForm();
 
         $form->handleRequest($request);
@@ -163,13 +171,17 @@ class MainController extends AbstractController
      */
     public function getAllExperienceByResearcher($idResearcher)
     {
+        
         $repo = $this->getDoctrine()->getRepository(Researcher::class);
 
         $researcher = $repo->findBy(array("token" => $idResearcher));
+        
+        
 
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
         $exp = $repo->findBy(array("researcher" => $researcher[0]->getId()));
+
 
         return $this->render('main/experiences.html.twig',[
             'experiences' => $exp,
@@ -266,74 +278,15 @@ class MainController extends AbstractController
             $inactiveAccount = $cache->get("error");
             $cache->delete("error");    
         }
+        
         return $this->render('main/connexion.html.twig',[
         "inactiveAccount" => $inactiveAccount
         ]);
     }
 
-     /**
-    * @Route("/onsenfout", name="security_login_json")
-    */
-    public function loginJson(Objectmanager $manager, Request $request, UserPasswordEncoderInterface $encoder)
-    {
-        $repo = $this->getDoctrine()->getRepository(Participant::class);
-        $data = json_decode($request->getContent(), true);
-        $participant = $repo->findOneBy(array("Mail"=>$data['username']));
-       
-        $mdp = $data['password'];
-        $check = $encoder->isPasswordValid($participant,$mdp);
-        if($check)
-        {
-            $rdmstr = new RandomString();
-            $participant->setToken($rdmstr->Generate());
-            $manager->persist($participant);
-            $manager->flush();
-            return($this->json($participant,200,[],[ObjectNormalizer::ATTRIBUTES => [
-                'id',
-                'Lastname',
-                'Firstname',
-                'Age',
-                'Sex',
-                'Mail',
-                'experiences' =>[
-                    'id',
-                ],
-                'Message' => [
-                    'id'
-                ],
-                'participationRequests' => [
-                    'id',
-                    'IdExperience'=>[
-                        'id'
-                        
-                    ],
-                    'Validated'
-                ],
-                'token',
-                'BirthDate'
-            ]
-                ]));
-        }
-        else
-        {
-            return ($this->json("error",400,[],[]));
-        }
-        
-    }
+    
 
-    /**
-     * @Route("/logoutjson", name="security_logout_json")
-     */
-    public function logout_json(Request $request, Objectmanager $manager)
-    {
-        $repo = $this->getDoctrine()->getRepository(Participant::class);
-        $data = json_decode($request->getContent(), true);
-        $participant = $repo->findOneBy(array("token"=>$data['token']));
-        $participant->setToken("");
-        $manager->persist($participant);
-        $manager->flush();
-        return ($this->json("succes",200,[],[]));
-    }
+    
     
     /**
     * @Route("/main/deconnexion", name="security_logout")
@@ -374,5 +327,13 @@ class MainController extends AbstractController
         $manager->persist($exp);
         $manager->flush();
         return $this->redirectToRoute('displayExperience', ['id'=> $exp->getToken()]);
+    }
+
+    /**
+     * @Route("/rgpd",name="rgpd")
+     */
+    public function rgpd()
+    {
+        return $this->render('main/rgpd.html.twig');
     }
 }
