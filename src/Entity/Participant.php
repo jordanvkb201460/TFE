@@ -64,6 +64,11 @@ class Participant implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $token;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $BirthDate;
     public function __construct()
     {
         $this->Experiences = new ArrayCollection();
@@ -235,6 +240,18 @@ class Participant implements UserInterface
         public function setToken(?string $token): self
         {
             $this->token = $token;
+
+            return $this;
+        }
+
+        public function getBirthDate(): ?\DateTimeInterface
+        {
+            return $this->BirthDate;
+        }
+
+        public function setBirthDate(\DateTimeInterface $BirthDate): self
+        {
+            $this->BirthDate = $BirthDate;
 
             return $this;
         }

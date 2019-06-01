@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Experience;
 use App\Entity\Researcher;
 use App\Entity\Participant;
@@ -15,13 +16,14 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextAreaType;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Service\RandomString;
 
 class MainController extends AbstractController
 {
@@ -131,6 +133,12 @@ class MainController extends AbstractController
                              'Enseignant'=>'Enseignant'
                          ]
                      ])
+                     ->add('RGPD', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'constraints' => array(new IsTrue(
+                    array('message' => 'Veuillez cocher cette case')
+                ))])
                      ->getForm();
 
         $form->handleRequest($request);
@@ -163,13 +171,17 @@ class MainController extends AbstractController
      */
     public function getAllExperienceByResearcher($idResearcher)
     {
+        
         $repo = $this->getDoctrine()->getRepository(Researcher::class);
 
         $researcher = $repo->findBy(array("token" => $idResearcher));
+        
+        
 
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
         $exp = $repo->findBy(array("researcher" => $researcher[0]->getId()));
+
 
         return $this->render('main/experiences.html.twig',[
             'experiences' => $exp,
@@ -189,6 +201,12 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
 
         $participationRq = $repo->findBy(array("IdExperience" => $exp->getId()));
+
+        foreach($participationRq as $tmp)
+        {
+            $tmp2 = $tmp->getIdParticipant();
+            $tmp2->setAge(date_diff($tmp2->getBirthDate(), new DateTime('now'))->y);
+        }
         
         return $this->render('main/experience.html.twig',[
             'exp' => $exp,
@@ -368,5 +386,13 @@ class MainController extends AbstractController
         $manager->persist($exp);
         $manager->flush();
         return $this->redirectToRoute('displayExperience', ['id'=> $exp->getToken()]);
+    }
+
+    /**
+     * @Route("/rgpd",name="rgpd")
+     */
+    public function rgpd()
+    {
+        return $this->render('main/rgpd.html.twig');
     }
 }

@@ -15,15 +15,20 @@
         {% if exp.freeReq == 1 %}
         Yes
         {%  else %}
-        No
-        <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
+        No</font></li>
         <li> <font size = "5"> Sex requirement : {{ exp.sexReq }}  </font> </li>
+        <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
         <li> <font size = "5"> Specifiq requirement : {{ exp.SpecifiqReq }}  </font> </li>
         {% endif %}</font></li>
         
         <li> <font size = "5"> Date début : {{ exp.dateDebut | date("d/m/Y")}}  </font> </li>
         <li> <font size = "5"> Date fin : {{ exp.dateFin  | date("d/m/Y")}}  </font> </li>
     </ul>
+
+    <div style="background-color :#88afef">
+      <h3> Description </h3><br>
+     {{exp.description}}
+    </div>
     
     {% if exp.isActive == 1 %}
     <a href="{{path('modifyExp', {'id' : exp.Token, 'method' : 'modify'}) }}" style="float:right;margin:5px" class="btn btn-primary">Modify</a>
@@ -40,8 +45,8 @@
       {{participant.IdParticipant.Lastname}}
       {{participant.idParticipant.Firstname}}
       Email : {{participant.idParticipant.Mail}}
-        Age : {{participant.idParticipant.Age}}
-        Sexe : {{participant.idParticipant.Sex}}
+      Age : {{ participant.idParticipant.Age }}
+      Sexe : {{participant.idParticipant.Sex}}
       <span>
         {% if participant.status == 1 %}
          <a href="{{path('participationToAnExperience', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "3"}) }}" type="button" class="btn btn-success">A participé</a>
