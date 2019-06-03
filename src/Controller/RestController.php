@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use \Datetime;
 use App\Entity\Experience;
 use App\Entity\Researcher;
 use App\Entity\Participant;
 use App\Form\ExperienceType;
+use App\Service\RandomString;
 use App\Entity\ParticipationRequest;
 use App\Repository\ExperienceRepository;
 use App\Repository\ParticipantRepository;
@@ -42,7 +44,7 @@ class RestController extends AbstractController
 
 
     /**
-    * @Route("/onsenfout", name="security_login_json")
+    * @Route("/loginjson", name="security_login_json")
     */
     public function loginJson(Objectmanager $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
@@ -77,7 +79,7 @@ class RestController extends AbstractController
                         'id'
                         
                     ],
-                    'Validated'
+                    'Status'
                 ],
                 'token',
                 'BirthDate'
@@ -142,14 +144,16 @@ class RestController extends AbstractController
     {
         $request->getContent();
         $data = json_decode($request->getContent(), true);
-        dump($data);
         $participant = new Participant();
         $participant->setFirstname($data["Firstname"]);
         $participant->setLastname($data["Lastname"]);
         $participant->setMail($data["Mail"]);
         $participant->setSex($data["Sex"]);
-        $participant->setAge($data["Age"]);
+        $participant->setBirthDate(new Datetime($data["BirthDate"]));
         $participant->setPassword($data["Password"]);
+        $participant->setAge(0);
+        $participant->setRegisterExperience(0);
+        $participant->setParticipatedExperience(0);
         $hash = $encoder->encodePassword($participant, $participant->getPassword());
         $participant->setPAssword($hash);
 

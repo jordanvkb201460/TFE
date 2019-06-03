@@ -61,15 +61,15 @@ class MainController extends AbstractController
 
         $participant = $repo->findOneBy(array("id" => $idParticipant));    
 
-        $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
-
-        $participationRq = $repo->findBy(array("IdExperience" => $idExp, "IdParticipant" => $idParticipant));
-        
         $repo = $this->getDoctrine()->getRepository(Experience::class);
 
-        $exp = $repo->findOneBy(array("id" => $idExp));
+        $exp = $repo->findOneBy(array("Token" => $idExp));
 
-        $participationRq[0]->setValidated($validated);
+
+        $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
+
+        $participationRq = $repo->findBy(array("IdExperience" => $exp->getId(), "IdParticipant" => $idParticipant));
+        
 
         if($validated == 1)
         {

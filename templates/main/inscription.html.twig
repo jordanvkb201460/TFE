@@ -17,7 +17,7 @@ Connexion
     {{ form_row(formUser.FirstName,{'attr': {'placeholder':'First Name'}})}}
     {{ form_row(formUser.Department,{'attr': {'placeholder':'Department'}})}}
     {{ form_row(formUser.Status,{'attr': {'placeholder':'Status, Job'}})}}
-    {{ form_row(formUser.RGPD,{'label' : "RGPD"})}} En cochant la case ci dessus j'atteste avoir lu la <a href="{{path('rgpd')}}" target="_blank">charte RGPD</a><br><br>
+    {{ form_row(formUser.RGPD,{'label' : "GDPR"})}} En cochant la case ci dessus j'atteste avoir lu la <a href="{{path('rgpd')}}" target="_blank">charte GDPR</a><br><br>
     <button type="submit" class="btn btn-success">Submit</button>
 
     {{ form_end(formUser) }}

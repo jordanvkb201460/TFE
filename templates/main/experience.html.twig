@@ -11,23 +11,19 @@
     <ul style="line-height:30px">
    
         <li> <font size = "5"> Compensation : {{exp.compensation}} €</font></li>
-        <li> <font size = "5"> Free requirement : 
+        <li> <font size = "5"> Critères libres : 
         {% if exp.freeReq == 1 %}
-        Yes
+        Oui
         {%  else %}
-<<<<<<< HEAD
-        No </font></li>
-        <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
-=======
-        No</font></li>
->>>>>>> 2404e28996bf0a37f763094bd6e8cd0b8c7720c0
-        <li> <font size = "5"> Sex requirement : {{ exp.sexReq }}  </font> </li>
-        <li> <font size = "5"> Age requirement : {{ exp.ageReq }}  </font> </li>
-        <li> <font size = "5"> Specifiq requirement : {{ exp.SpecifiqReq }}  </font> </li>
+        Non </font></li>
+        <li> <font size = "5"> Age requis: {{ exp.ageReq }}  </font> </li>
+        <li> <font size = "5"> Sexe requis : {{ exp.sexReq }}  </font> </li>
+        <li> <font size = "5"> Critères spécifiques : {{ exp.SpecifiqReq }}  </font> </li>
         {% endif %}</font></li>
         
         <li> <font size = "5"> Date début : {{ exp.dateDebut | date("d/m/Y")}}  </font> </li>
         <li> <font size = "5"> Date fin : {{ exp.dateFin  | date("d/m/Y")}}  </font> </li>
+        <li> <font size = "5"> Lieu : {{ exp.Place}}  </font> </li>
     </ul>
 
     <div style="background-color :#88afef">
@@ -54,8 +50,8 @@
       Sexe : {{participant.idParticipant.Sex}}
       <span>
         {% if participant.status == 1 %}
-         <a href="{{path('participationToAnExperience', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "3"}) }}" type="button" class="btn btn-success">A participé</a>
-        <a href="{{path('participationToAnExperience', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "4"}) }}" type="button" class="btn btn-danger">N'a pas participer</a>
+         <a href="{{path('participationToAnExperience', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "3"}) }}" type="button" class="btn btn-success">A participé</a>
+        <a href="{{path('participationToAnExperience', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "4"}) }}" type="button" class="btn btn-danger">N'a pas participé</a>
         {% elseif participant.status == 3 %}
         A participé
         {% elseif participant.status == 4 %}
@@ -69,9 +65,11 @@
         {% set countParticipated = countParticipated + 1 %}
         {% elseif tmp.status == 3 %}
         {% set countRegistered = countRegistered + 1 %}
+        
         {% endif %}
         {% endfor %}
         {% if countRegistered   + countParticipated  == 0 %}
+        Trop peu d'informations ;
         {% else %}
         {{ (countRegistered / (countRegistered + countParticipated)  * 100) | number_format(2,'.',',')}}%
         {% endif %}
@@ -84,8 +82,8 @@
         Inscription validée
         {% endif %}
         {% if participant.Status == 0 %}
-        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "1"}) }}" type="button" class="btn btn-success">Accepter</a>
-        <a href="{{path('acceptRequest', {'idExp' : exp.id, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "2"}) }}" type="button" class="btn btn-danger">Refuser</a>
+        <a href="{{path('acceptRequest', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "1"}) }}" type="button" class="btn btn-success">Accepter</a>
+        <a href="{{path('acceptRequest', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "2"}) }}" type="button" class="btn btn-danger">Refuser</a>
         {% endif %}
       </span>
     </li>

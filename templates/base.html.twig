@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" name="accueil" content="Inscription de test pour la recherche en ligne et recherche de participants">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="stylesheet"
          href="https://bootswatch.com/4/flatly/bootstrap.min.css">
@@ -14,7 +14,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="navbar-collapse collapse show" id="navbarColor01" style="">
+            <div class="navbar-collapse collapse show" id="navbarColor01">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item ">
                         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
@@ -40,7 +40,7 @@
                         </li>
                     {% endif %}
                         <li class="nav-item ">
-                            <a class="nav-link" href="{{path('rgpd') }}">RGPD</a>
+                            <a class="nav-link" href="{{path('rgpd') }}">GDPR</a>
                         </li>
                 </ul>
             </div>
@@ -49,7 +49,7 @@
             <div class="container">
                 <div class="alert alert-{{label}} text-center">
                     {% for message in messages %}
-                        <p>
+                        <p aria-hidden="true">
                             {{message|raw}}
                         </p>
                     {% endfor %}
