@@ -92,9 +92,15 @@ class MainController extends AbstractController
      */
     public function ConfirmParticipation($idExp, $idParticipant,$validated, ObjectManager $manager)
     {
+        $repo = $this->getDoctrine()->getRepository(Experience::class);
+        $exp = $repo->findOneBy(array("Token" => $idExp));
+        $repo = $this->getDoctrine()->getRepository(Participant::class);
+        $part = $repo->findOneBy(array("OneTimeToken" => $idParticipant));
+
         $repo = $this->getDoctrine()->getRepository(ParticipationRequest::class);
 
-        $participationRq = $repo->findOneBy(array("IdExperience" => $idExp, "IdParticipant" => $idParticipant));
+        $participationRq = $repo->findOneBy(array("IdExperience" => $exp->getId(), "IdParticipant" => $part->getId()));
+
         if($validated == 3)
         {
             $participationRq->setStatus(3);
@@ -239,8 +245,7 @@ class MainController extends AbstractController
             $exp = $repo->findOneBy(array("Token"=>$id)); // a changer
         }
         
-        //dump($researcher);
-
+        
         $form = $this->createForm(ExperienceType::class, $exp);
 
         $form->handleRequest($request);
@@ -323,7 +328,6 @@ class MainController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Experience::class);
         $exp = $repo->findOneBy(array("Token" => $idExp));
         $exp->setIsActive(false);
-        dump($exp);
         $manager->persist($exp);
         $manager->flush();
         return $this->redirectToRoute('displayExperience', ['id'=> $exp->getToken()]);

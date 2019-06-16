@@ -50,8 +50,8 @@
       Sexe : {{participant.idParticipant.Sex}}
       <span>
         {% if participant.status == 1 %}
-         <a href="{{path('participationToAnExperience', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "3"}) }}" type="button" class="btn btn-success">A participé</a>
-        <a href="{{path('participationToAnExperience', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.Id, 'validated' : "4"}) }}" type="button" class="btn btn-danger">N'a pas participé</a>
+         <a href="{{path('participationToAnExperience', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.OneTimeToken, 'validated' : "3"}) }}" type="button" class="btn btn-success">A participé</a>
+        <a href="{{path('participationToAnExperience', {'idExp' : exp.Token, 'idParticipant' : participant.IdParticipant.OneTimeToken, 'validated' : "4"}) }}" type="button" class="btn btn-danger">N'a pas participé</a>
         {% elseif participant.status == 3 %}
         A participé
         {% elseif participant.status == 4 %}

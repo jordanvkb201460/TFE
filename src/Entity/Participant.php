@@ -69,6 +69,12 @@ class Participant implements UserInterface
      * @ORM\Column(type="datetime")
      */
     private $BirthDate;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $OneTimeToken;
+    
     public function __construct()
     {
         $this->Experiences = new ArrayCollection();
@@ -252,6 +258,18 @@ class Participant implements UserInterface
         public function setBirthDate(\DateTimeInterface $BirthDate): self
         {
             $this->BirthDate = $BirthDate;
+
+            return $this;
+        }
+
+        public function getOneTimeToken(): ?string
+        {
+            return $this->OneTimeToken;
+        }
+
+        public function setOneTimeToken(?string $OneTimeToken): self
+        {
+            $this->OneTimeToken = $OneTimeToken;
 
             return $this;
         }

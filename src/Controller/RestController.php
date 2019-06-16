@@ -142,6 +142,7 @@ class RestController extends AbstractController
      */
     public function inscriptionParticipant(Request $request,  ParticipantRepository $repo, ObjectManager $manager, UserPasswordEncoderInterface $encoder)
     {
+       
         $request->getContent();
         $data = json_decode($request->getContent(), true);
         $participant = new Participant();
@@ -154,6 +155,9 @@ class RestController extends AbstractController
         $participant->setAge(0);
         $participant->setRegisterExperience(0);
         $participant->setParticipatedExperience(0);
+        $rdmstr = new RandomString();
+        $participant->setOneTimeToken($rdmstr->Generate());
+        $participant->setParticipatedExperience(0);
         $hash = $encoder->encodePassword($participant, $participant->getPassword());
         $participant->setPAssword($hash);
 
@@ -161,6 +165,7 @@ class RestController extends AbstractController
         $manager->persist($participant);
         $manager->flush();
        //$participant = $_POST["participant"];
+       
        return $this->json($data,200,[],[]);
     }
 
