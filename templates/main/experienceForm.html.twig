@@ -9,23 +9,21 @@ Formulaire Experience
 <div style="width:600px">
 
     {{ form_start(formExp) }}
-    <legend>Creation d'une expérience</legend>
+    <legend>Création d'une expérience</legend>
     
     {{ form_row(formExp.Name,{'label' : 'Nom','attr': {'placeholder':'Nom'}})}}
     {{ form_row(formExp.Description,{'label' : 'Description','attr': {'placeholder':'Description'}})}}
-    {{ form_row(formExp.FreeReq,{'label' : 'Pas de critère spécifique','attr': {'placeholder':'FreeReq'}})}}
-    
-    {{ form_row(formExp.FeedBack,{'label' : 'Feedback', 'attr': {'placeholder':'FeedBack'}})}}
-
-    {{ form_row(formExp.AgeReq,{'label' : 'Age minimal requis','attr': {'placeholder':'AgeReq'}})}}
-    {{ form_row(formExp.SexReq,{'label' : 'Sexe requis','attr': {'placeholder':'SexReq'}})}}
-    {{ form_row(formExp.SpecifiqReq,{'label' : 'Traits spécifiques requis','attr': {'placeholder':'SpecifiqReq'}})}}
+    {{ form_row(formExp.FreeReq,{'label' : 'Pas de critère spécifique'})}}
+    {{ form_row(formExp.AgeReq,{'label' : 'Age minimal requis','attr': {'placeholder':'0'}})}}
+    {{ form_row(formExp.SexReq,{'label' : 'Sexe requis'})}}
+    {{ form_row(formExp.SpecifiqReq,{'label' : 'Critères spécifiques requis','attr': {'placeholder':'Critères spécifiques'}})}}
     {{ form_row(formExp.Compensation,{'attr': {'placeholder':'Compensation'}})}}
-    {{ form_row(formExp.Place,{'attr': {'placeholder':'Place'}})}}
-    {{ form_row(formExp.DateDebut,{'attr': {'placeholder':'Place'}})}}
-    {{ form_row(formExp.DateFin,{'attr': {'placeholder':'Place'}})}}
-    {{ form_row(formExp.Check,{'label' : 'je m\'engage à ce que mes critères ne soient pas discriminatoires'})}}
-    <button type="submit" class="btn btn-success">Submit</button>
+    {{ form_row(formExp.Place,{'label' : "Lieu", 'attr': {'placeholder':'Lieu'}})}}
+    {{ form_row(formExp.DateDebut)}}
+    {{ form_row(formExp.DateFin)}}
+    {{ form_row(formExp.FeedBack,{'label' : 'Feedback', 'attr': {'placeholder':'Feedback'}})}}
+    {{ form_row(formExp.Check,{'label' : 'Je m\'engage à ce que mes critères ne soient pas discriminatoires'})}}
+    <button type="submit" class="btn btn-success">Soumettre</button>
 
     {{ form_end(formExp) }}
 </div>
